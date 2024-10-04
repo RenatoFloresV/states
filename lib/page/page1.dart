@@ -1,5 +1,8 @@
 import 'package:flutter/material.dart';
 
+import 'package:states/models/user.dart';
+import 'package:states/services/user_service.dart';
+
 class Page1 extends StatelessWidget {
   const Page1({super.key});
 
@@ -14,33 +17,53 @@ class Page1 extends StatelessWidget {
       appBar: AppBar(
         title: const Text('Page 1'),
       ),
-      body: const UserInfo(),
+      body: StreamBuilder(
+          stream: userService.userStream,
+          builder: (context, snapshot) {
+            if (snapshot.hasData) {
+              return UserInfo(user: snapshot.data!);
+            } else {
+              return Center(
+                  child: Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  const Text('No user loaded'),
+                  const SizedBox(height: 20),
+                  ElevatedButton(
+                      child: const Text('Go to assign user'),
+                      onPressed: () {
+                        Navigator.pushNamed(context, '/page2');
+                      }),
+                ],
+              ));
+            }
+          }),
     );
   }
 }
 
 class UserInfo extends StatelessWidget {
-  const UserInfo({super.key});
+  const UserInfo({required this.user, super.key});
 
+  final User user;
   @override
   Widget build(BuildContext context) {
-    return const SizedBox(
+    return SizedBox(
       width: double.infinity,
       height: double.infinity,
       child: Column(
-        // mainAxisAlignment: MainAxisAlignment.center,
-        // crossAxisAlignment: CrossAxisAlignment.center,
         children: [
-          Text('General',
+          const Text('General',
               style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold)),
-          Divider(),
-          ListTile(title: Text('Name')),
-          ListTile(title: Text('Age')),
-          ListTile(title: Text('Gender')),
-          Text('Professions',
+          const Divider(),
+          ListTile(title: const Text('Name'), subtitle: Text(user.name)),
+          ListTile(
+              title: const Text('Age'), subtitle: Text(user.age.toString())),
+          const ListTile(title: Text('Gender')),
+          const Text('Professions',
               style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold)),
-          Divider(),
-          ListTile(title: Text('Developer')),
+          const Divider(),
+          const ListTile(title: Text('Developer')),
         ],
       ),
     );
