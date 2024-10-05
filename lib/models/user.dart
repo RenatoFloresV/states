@@ -1,9 +1,9 @@
 class User {
-  final String name;
-  final int age;
-  final DateTime birthday;
-  final String gender;
-  final List<String> professions;
+  String name;
+  int age;
+  DateTime birthday;
+  String gender;
+  List<String> professions;
 
   User({
     required this.name,
