@@ -1,9 +1,9 @@
 class User {
-  final String name;
-  final int age;
-  final DateTime birthday;
-  final String gender;
-  final List<String> professions;
+  String name;
+  int age;
+  DateTime birthday;
+  String gender;
+  List<String> professions;
 
   User({
     required this.name,
@@ -12,4 +12,26 @@ class User {
     required this.gender,
     required this.professions,
   });
+
+  User copyWith({
+    String? name,
+    int? age,
+    DateTime? birthday,
+    String? gender,
+    List<String>? professions,
+  }) {
+    return User(
+      name: name ?? this.name,
+      age: age ?? this.age,
+      birthday: birthday ?? this.birthday,
+      gender: gender ?? this.gender,
+      professions: professions ?? this.professions,
+    );
+  }
+
+  List<Object> get props => [name, age, birthday, gender, professions];
+
+  @override
+  String toString() =>
+      'User { name: $name, age: $age, birthday: $birthday, gender: $gender, professions: $professions }';
 }

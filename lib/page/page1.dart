@@ -1,5 +1,9 @@
 import 'package:flutter/material.dart';
 
+import 'package:flutter_bloc/flutter_bloc.dart';
+
+import '../bloc/user/user_cubit.dart';
+
 class Page1 extends StatelessWidget {
   const Page1({super.key});
 
@@ -13,8 +17,21 @@ class Page1 extends StatelessWidget {
           }),
       appBar: AppBar(
         title: const Text('Page 1'),
+        actions: [
+          IconButton(
+              onPressed: () => context.read<UserCubit>().deleteUser,
+              icon: const Icon(Icons.exit_to_app))
+        ],
       ),
-      body: const UserInfo(),
+      body: BlocBuilder<UserCubit, UserState>(
+        builder: (_, state) {
+          final user = state.user;
+          if (user == null || state.status == UserStatus.initial) {
+            return const Center(child: Text('Loading...'));
+          }
+          return const UserInfo();
+        },
+      ),
     );
   }
 }
@@ -24,23 +41,24 @@ class UserInfo extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return const SizedBox(
+    final user = context.select((UserCubit cubit) => cubit.state.user);
+    return SizedBox(
       width: double.infinity,
       height: double.infinity,
       child: Column(
-        // mainAxisAlignment: MainAxisAlignment.center,
-        // crossAxisAlignment: CrossAxisAlignment.center,
         children: [
-          Text('General',
+          const Text('General',
               style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold)),
-          Divider(),
-          ListTile(title: Text('Name')),
-          ListTile(title: Text('Age')),
-          ListTile(title: Text('Gender')),
-          Text('Professions',
+          const Divider(),
+          ListTile(title: const Text('Name'), subtitle: Text(user!.name)),
+          ListTile(
+              title: const Text('Age'), subtitle: Text(user.age.toString())),
+          ListTile(title: const Text('Gender'), subtitle: Text(user.gender)),
+          const Text('Professions',
               style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold)),
-          Divider(),
-          ListTile(title: Text('Developer')),
+          const Divider(),
+          ...user.professions
+              .map((profession) => ListTile(title: Text(profession))),
         ],
       ),
     );
