@@ -12,4 +12,20 @@ class User {
     required this.gender,
     required this.professions,
   });
+
+  User copyWith({
+    String? name,
+    int? age,
+    DateTime? birthday,
+    String? gender,
+    List<String>? professions,
+  }) {
+    return User(
+      name: name ?? this.name,
+      age: age ?? this.age,
+      birthday: birthday ?? this.birthday,
+      gender: gender ?? this.gender,
+      professions: professions ?? this.professions,
+    );
+  }
 }
